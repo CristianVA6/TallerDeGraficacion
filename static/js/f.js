@@ -7,7 +7,7 @@ let cameraZoom = 1;
 let MAX_ZOOM = 5;
 let MIN_ZOOM = 1;
 let SCROLL_SENSITIVITY = 0.0005;
-let input = '', Min = 0, Max = 0, Escala = 40, Potencia = '', Constate = '';
+let input = '', Min = 0, Max = 0, Escala = 40, Potencia = '', Constate = '', sincos = '';
 let valorY = 0;
 var dibujar = false, C = false;
 
@@ -66,8 +66,8 @@ function draw() {
 
     ctx.beginPath();
 
-    ctx.strokeStyle = "white"; 
-    ctx.lineWidth = 2; 
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
 
     ctx.moveTo(w / 2, 0);
     ctx.lineTo(w / 2, h);
@@ -114,6 +114,7 @@ function draw() {
         ctx.lineWidth = 5;
         ctx.lineCap = "round";
         var y = 0;
+        console.log(sincos)
         if (parseInt(Potencia) == 1) {
             for (var i = Min; i < Max; i++) {
 
@@ -128,12 +129,40 @@ function draw() {
             if (parseInt(Potencia) == 2) {
                 for (var i = Min; i < Max; i++) {
 
-                    y = (h / 2) - (parseInt(Constate)*(i * i) + parseInt(input)) * (h / Escala);
+                    y = (h / 2) - (parseInt(Constate) * (i * i) + parseInt(input)) * (h / Escala);
                     ctx.moveTo((w / 2) + i * (w / Escala), y);
                     i++;
-                    y = (h / 2) - (parseInt(Constate)*(i * i) + parseInt(input)) * (h / Escala);
+                    y = (h / 2) - (parseInt(Constate) * (i * i) + parseInt(input)) * (h / Escala);
                     ctx.lineTo((w / 2) + i * (w / Escala), y);
                     i--;
+                }
+            } else {
+                if (parseInt(sincos) == 1) {
+
+                    for (var i = Min; i < Max; i++) {
+
+                        y = (h / 2) - ((parseInt(Constate) * Math.sin(i)) + parseInt(input)) * (h / Escala);
+                        ctx.moveTo((w / 2) + i * (w / Escala), y);
+                        i++;
+                        y = (h / 2) - ((parseInt(Constate) * Math.sin(i)) + parseInt(input)) * (h / Escala);
+                        ctx.lineTo((w / 2) + i * (w / Escala), y);
+                        i--;
+
+                    }
+                } else {
+                    if (parseInt(sincos) == 2) {
+
+                        for (var i = Min; i < Max; i++) {
+
+                            y = (h / 2) - ((parseInt(Constate) * Math.cos(i)) + parseInt(input)) * (h / Escala);
+                            ctx.moveTo((w / 2) + i * (w / Escala), y);
+                            i++;
+                            y = (h / 2) - ((parseInt(Constate) * Math.cos(i)) + parseInt(input)) * (h / Escala);
+                            ctx.lineTo((w / 2) + i * (w / Escala), y);
+                            i--;
+
+                        }
+                    }
                 }
             }
         }
@@ -250,6 +279,7 @@ function Dfunciones() {
     dibujar = true;
     input = '0'
     Potencia = '0';
+    sincos = '0';
     Constate = '1';
     var V = 0, X = 0;
     Min = document.getElementById("Min").value;
@@ -260,15 +290,19 @@ function Dfunciones() {
             Potencia++;
             X++;
         }
+        if (inp[i] == 'n') {
+            sincos += '1';
+        }
+        if (inp[i] == 'c') {
+            sincos += '2';
+        }
         if (/^\d+$/.test(inp[i]) && X == 0) {
             Constate += inp[i];
-            console.log(Constate);
         }
         if (inp[i] == '-' && X == 0) {
             Constate = '';
             i++;
             Constate += '-' + inp[i];
-            console.log(Constate);
         }
         if (inp[i] == '+') {
             V++;
@@ -285,12 +319,12 @@ function Dfunciones() {
                 if (/^\d+$/.test(inp[i]) && V != 0) {
                     input += inp[i];
                 }
-            } 
+            }
         }
     }
     console.log(inp);
     console.log(Constate);
-    console.log(parseInt(input));
+    console.log(parseInt(sincos));
 }
 function Cuadricula() {
     if (C) {
